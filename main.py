@@ -26,6 +26,15 @@ from PyQt5.QtCore import Qt
 ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("mycompany.excelcleaner")
 
 
+
+def resource_path(relative_path):
+    try:
+        base_path = sys._MEIPASS  # khi chạy exe
+    except Exception:
+        base_path = os.path.abspath(".")  # khi chạy py
+
+    return os.path.join(base_path, relative_path)
+
 class ExcelCleaner(QWidget):
     def __init__(self):
         super().__init__()
@@ -36,7 +45,11 @@ class ExcelCleaner(QWidget):
         self.setGeometry(300, 200, 700, 500)
 
         # アイコン設定
-        self.setWindowIcon(QIcon("assets/favicon.ico"))
+        
+        icon_path = resource_path("assets/favicon.ico")
+        icon = QIcon(icon_path)
+
+        self.setWindowIcon(icon)
 
         # スタイルシート
         self.setStyleSheet("""
@@ -194,6 +207,19 @@ class ExcelCleaner(QWidget):
         text = text.strip().lower()
 
         return text
+    
+    
+    def normalize_company_output(self, text):
+        if pd.isna(text):
+            return ""
+
+        text = str(text)
+
+        text = unicodedata.normalize("NFKC", text)
+        text = text.split("/")[0]
+
+        return text.strip()
+
 
     def normalize_url(self, url):
         if pd.isna(url):
@@ -227,6 +253,12 @@ class ExcelCleaner(QWidget):
 
             df = pd.read_excel(self.input_file)
 
+            # ✅ Fix các cột Unnamed -> giữ trống
+            df.columns = [
+                "" if str(col).startswith("Unnamed:") else col
+                for col in df.columns
+            ]
+
             if column_name not in df.columns:
                 self.log(f"カラムが見つかりません: {column_name}", "red")
                 return
@@ -238,6 +270,12 @@ class ExcelCleaner(QWidget):
                 df["_temp_key"] = df[column_name].apply(
                     self.normalize_company
                 )
+
+                # ✅ output đẹp (không lower)
+                df[column_name] = df[column_name].apply(
+                    self.normalize_company_output
+                )
+
 
             elif process_type == "URL":
                 df["_temp_key"] = df[column_name].apply(
@@ -301,8 +339,9 @@ class ExcelCleaner(QWidget):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-
-    icon = QIcon("assets/favicon.ico")
+    
+    icon_path = resource_path("assets/favicon.ico")
+    icon = QIcon(icon_path)
 
     app.setWindowIcon(icon)
 
