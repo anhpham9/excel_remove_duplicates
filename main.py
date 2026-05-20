@@ -2,6 +2,7 @@ import sys
 import os
 import re
 import unicodedata
+import ctypes
 from urllib.parse import urlparse
 
 import pandas as pd
@@ -22,6 +23,7 @@ from PyQt5.QtWidgets import (
 
 from PyQt5.QtGui import QColor, QTextCharFormat, QTextCursor, QIcon, QFont
 from PyQt5.QtCore import Qt
+ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("mycompany.excelcleaner")
 
 
 class ExcelCleaner(QWidget):
@@ -34,7 +36,7 @@ class ExcelCleaner(QWidget):
         self.setGeometry(300, 200, 700, 500)
 
         # アイコン設定
-        self.setWindowIcon(QIcon("assets/icon.ico"))
+        self.setWindowIcon(QIcon("assets/favicon.ico"))
 
         # スタイルシート
         self.setStyleSheet("""
@@ -299,14 +301,16 @@ class ExcelCleaner(QWidget):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    app.setWindowIcon(QIcon("assets/icon.ico"))
 
+    icon = QIcon("assets/favicon.ico")
+
+    app.setWindowIcon(icon)
 
     app.setFont(QFont("Meiryo", 14))
 
     window = ExcelCleaner()
 
-    window.setWindowIcon(QIcon("assets/icon.ico"))
+    window.setWindowIcon(icon)
 
     window.show()
 
