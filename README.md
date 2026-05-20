@@ -109,7 +109,7 @@ pip install pandas openpyxl pyqt5 pyinstaller
 ## exeファイル作成方法
 
 ```bash
-pyinstaller --onefile --windowed --icon=icon.ico main.py
+pyinstaller --onefile --windowed --icon=assets/icon.ico main.py
 ```
 
 生成先:
