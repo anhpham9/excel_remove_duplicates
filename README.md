@@ -8,6 +8,7 @@
 
 Python + PyQt5 で作成されており、exe化して他のPCでもそのまま利用可能です。
 
+![tool](docs/UI.png)
 ---
 
 # 主な機能
@@ -104,6 +105,7 @@ URL
 
 ```bash
 pip install pandas openpyxl pyqt5 pyinstaller
+pip install pyqtdarktheme
 ```
 
 ## exeファイル作成方法
