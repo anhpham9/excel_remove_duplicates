@@ -299,10 +299,14 @@ class ExcelCleaner(QWidget):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
+    app.setWindowIcon(QIcon("assets/icon.ico"))
+
 
     app.setFont(QFont("Meiryo", 14))
 
     window = ExcelCleaner()
+
+    window.setWindowIcon(QIcon("assets/icon.ico"))
 
     window.show()
 
